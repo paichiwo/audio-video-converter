@@ -1,4 +1,6 @@
+# PyCharm Folders
 /venv/
 /.idea/
 /__pychache__/
-
+# My Folders
+/test/
