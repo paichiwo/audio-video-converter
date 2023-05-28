@@ -2,11 +2,23 @@ import PySimpleGUI as psg
 import os
 import ffmpeg
 
+import os
+import ffmpeg
 
-def convert_to_mp4(file):
+
+def convert_to_wmv(file):
     name, ext = os.path.splitext(file)
-    out_name = name + "_convert.mp4"
-    ffmpeg.input(file).output(out_name).run()
+    count = 1
+    out_name = name + "_convert_{}{}".format(count, ext)
+
+    while os.path.exists(out_name):
+        count += 1
+        out_name = name + "_convert_{}{}".format(count, ext)
+
+    def progress_callback(progress):
+        print("Converting {}: {:.2f}%".format(file, progress))
+
+    ffmpeg.input(file).output(out_name, vcodec='wmv1', progress=progress_callback).run()
     print("Finished converting {}".format(file))
 
 
@@ -16,12 +28,17 @@ layout = [[psg.T("")], [psg.Text("Choose a file: "), psg.Input(), psg.FileBrowse
 # Building Window
 window = psg.Window('My File Browser', layout, size=(1000, 150))
 
+
 while True:
     event, values = window.read()
     if event == psg.WIN_CLOSED or event == "Exit":
         break
     elif event == "Submit":
-        convert_to_mp4(values["-IN-"])
+        try:
+            convert_to_wmv(values["-IN-"])
+            break
+        except ffmpeg._run.Error:
+            print("codec error")
 
 window.close()
 
