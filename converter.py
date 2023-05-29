@@ -21,39 +21,39 @@ def calculate_progress(file_path, progress_bar):
             progress_bar.update(round(percentage))
 
 
-def convert_with_ffmpeg(input_file, output_file, video_codec):
-    """Using ffmpeg functions to convert the files."""
+def use_ffmpeg(input_file, output_file, video_codec, progress_bar):
+    """Convert a file with ffmpeg"""
     # Check if the output file already exists
     if os.path.exists(output_file):
         # Ask the user if they want to overwrite the file
-        choice = psg.popup_yes_no("Overwrite ?")
+        choice = psg.popup_yes_no("Overwrite?")
         if choice != 'Yes':
             # User does not want to overwrite, exit the function
             print("Conversion canceled.")
             return
 
-    ffmpeg_command = ['ffmpeg', '-i', input_file, '-c:v', video_codec, '-y', output_file]
+    ffmpeg_command = ['executables/ffmpeg', '-i', input_file, '-c:v', video_codec, '-y', output_file]
     process = subprocess.Popen(ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
     output, error = process.communicate()
-
+    calculate_progress(output_file, progress_bar)
     if process.returncode == 0:
         # Conversion successful
         print("Conversion completed successfully!")
     else:
-        # Error occurred
-        print("Conversion failed. Error message:")
+        print(output)
         print(error)
+        print(process.returncode)
 
 
 def converter(video_codec, file_extension):
+    """Call for conversion."""
     input_file = values["-IN-"]
     name, ext = os.path.splitext(input_file)
     output_file = name + "_convert" + file_extension
     try:
-        convert_with_ffmpeg(input_file, output_file, video_codec)
-        calculate_progress(output_file, progress)
+        use_ffmpeg(input_file, output_file, video_codec, progress)
     except FileNotFoundError:
-        print("Please choose a file")
+        print("No ffmpeg found")
 
 
 psg.theme("DarkBlue")
@@ -82,17 +82,22 @@ while True:
         break
 
     elif event == "Submit":
-        progress = window["-PBAR-"]  # Get the progress bar element
-        if values["-WMV-"]:
-            codec = 'wmv1'
-            extension = '.wmv'
-        if values["-MP4-"]:
-            codec = 'h264'
-            extension = '.mp4'
-        if values["-MP3-"]:
-            codec = 'mp3'
-            extension = '.mp3'
+        if values["-IN-"]:
+            progress = window["-PBAR-"]  # Get the progress bar element
+            if values["-WMV-"]:
+                codec = 'wmv1'
+                extension = '.wmv'
+            elif values["-MP4-"]:
+                codec = 'h264'
+                extension = '.mp4'
+            elif values["-MP3-"]:
+                codec = 'mp3'
+                extension = '.mp3'
 
-        converter(codec, extension)
+            converter(codec, extension)
+
+        else:
+            print("No file")
+
 
 window.close()
