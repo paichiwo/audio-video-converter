@@ -12,7 +12,7 @@ file_list = []
 
 
 def get_all_paths(event):
-
+    """Get single file, multiple files or a folder path"""
     files = []
     if isinstance(event.data, str):
         if os.path.isdir(event.data):  # Handle a folder drop
@@ -31,21 +31,21 @@ def get_all_paths(event):
 
 
 def update_listbox(event):
+    """Update the file list."""
     file_list.extend(get_all_paths(event))
-
-    print(len(file_list))
-
     if len(file_list) > 0:
         frame_1.pack_forget()
         frame_2.pack()
 
 
 def clear_listbox():
+    """Clear the file list."""
     ListboxWidget.delete(0, END)
     file_list.clear()
 
 
 def folder_selection():
+    """Choose destination folder."""
     folder_selected = filedialog.askdirectory()
     return folder_selected
 
