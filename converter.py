@@ -65,6 +65,7 @@ layout = [
         psg.Radio("MP4", key="-MP4-", default=True, group_id="format"),
         psg.Radio("WMV", key="-WMV-", group_id="format"),
         psg.Radio("AVI", key="-AVI-", group_id="format"),
+        psg.Radio("MOV", key="-MOV-", group_id="format"),
         psg.Radio("MP3", key="-MP3-", group_id="format"),
         psg.Push()
     ],
@@ -86,8 +87,8 @@ while True:
         break
 
     elif event == "-BROWSE-":
-        file = psg.popup_get_file("", no_window=True)
-        window["-IN-"].update(file)
+        file_choice = psg.popup_get_file("", no_window=True)
+        window["-IN-"].update(file_choice)
 
     elif event == "Submit":
         if values["-IN-"]:
@@ -101,6 +102,9 @@ while True:
             elif values["-AVI-"]:
                 codec = "libx264"
                 extension = ".avi"
+            elif values["-MOV-"]:
+                codec = "libx264"
+                extension = ".mov"
             elif values["-MP3-"]:
                 codec = "libmp3lame"
                 extension = ".mp3"
