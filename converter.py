@@ -58,11 +58,11 @@ def converter(video_codec, file_extension):
 
 psg.theme("DarkBlue")
 layout = [
-    [psg.T("")],
     [psg.Text("Choose a file: "), psg.Input(expand_x=True), psg.FileBrowse(key="-IN-")],
     [
         psg.Radio("MP4", key="-MP4-", default=True, group_id="format"),
         psg.Radio("WMV", key="-WMV-", group_id="format"),
+        psg.Radio("AVI", key="-AVI-", group_id="format"),
         psg.Radio("MP3", key="-MP3-", group_id="format")
     ],
     [psg.Button("Submit")],
@@ -90,8 +90,11 @@ while True:
             elif values["-MP4-"]:
                 codec = 'h264'
                 extension = '.mp4'
+            elif values["-AVI-"]:
+                codec = 'libx264'
+                extension = '.avi'
             elif values["-MP3-"]:
-                codec = 'mp3'
+                codec = 'libmp3lame'
                 extension = '.mp3'
 
             converter(codec, extension)
