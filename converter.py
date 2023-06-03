@@ -58,14 +58,19 @@ def converter(video_codec, file_extension):
 
 psg.theme("DarkBlue")
 layout = [
-    [psg.Text("Choose a file: "), psg.Input(expand_x=True), psg.FileBrowse(key="-IN-")],
+    [psg.Text("Choose a file: "),
+     psg.Input(expand_x=True, border_width=0, key="-IN-"),
+     psg.Button("Browse", key="-BROWSE-", border_width=0)],
     [
+        psg.Push(),
         psg.Radio("MP4", key="-MP4-", default=True, group_id="format"),
         psg.Radio("WMV", key="-WMV-", group_id="format"),
         psg.Radio("AVI", key="-AVI-", group_id="format"),
-        psg.Radio("MP3", key="-MP3-", group_id="format")
+        psg.Radio("MP3", key="-MP3-", group_id="format"),
+        psg.Push()
     ],
-    [psg.Button("Submit")],
+    [psg.Push(), psg.Button("Submit", border_width=0), psg.Push()],
+    [psg.Text("", key="-MESSAGE-")],
     [psg.VPush()],
     [psg.ProgressBar(100, orientation='h', expand_x=True, size=(20, 2), key='-PBAR-')]
 ]
@@ -80,6 +85,10 @@ while True:
     event, values = window.read(timeout=0)
     if event == psg.WIN_CLOSED or event == "Exit":
         break
+
+    elif event == '-BROWSE-':
+        file = psg.popup_get_file('', no_window=True)
+        window['-IN-'].update(file)
 
     elif event == "Submit":
         if values["-IN-"]:
