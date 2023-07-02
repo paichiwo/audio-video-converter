@@ -1,9 +1,10 @@
+import threading
 import PySimpleGUI as psg
 import os
 import subprocess
 
 
-def calculate_progress(file_path, progress_bar):
+def calculate_progress(file_path):
     """Calculate the progress of the output file."""
     total_size = os.path.getsize(file_path)
     bytes_processed = 0
@@ -16,11 +17,11 @@ def calculate_progress(file_path, progress_bar):
 
             bytes_processed += len(chunk)
             percentage = (bytes_processed / total_size) * 100
-            # Update the progress bar value
-            progress_bar.update(round(percentage))
+            # Send a custom event to update the progress bar value
+            window.write_event_value('-UPDATE_PROGRESS-', round(percentage))
 
 
-def use_ffmpeg(input_file, output_file, video_codec, progress_bar):
+def use_ffmpeg(input_file, output_file, video_codec):
     """Convert a file with ffmpeg"""
     # Check if the output file already exists
     if os.path.exists(output_file):
@@ -34,7 +35,7 @@ def use_ffmpeg(input_file, output_file, video_codec, progress_bar):
     ffmpeg_command = ["executables/ffmpeg", "-i", input_file, "-c:v", video_codec, "-y", output_file]
     process = subprocess.Popen(ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
     output, error = process.communicate()
-    calculate_progress(output_file, progress_bar)
+    calculate_progress(output_file)
     if process.returncode == 0:
         # Conversion successful
         window["-MESSAGE-"].update("Conversion completed successfully!")
@@ -50,7 +51,7 @@ def converter(video_codec, file_extension):
     name, ext = os.path.splitext(input_file)
     output_file = name + "_convert" + file_extension
     try:
-        use_ffmpeg(input_file, output_file, video_codec, progress)
+        use_ffmpeg(input_file, output_file, video_codec)
     except FileNotFoundError:
         window["-MESSAGE-"].update("No ffmpeg found")
 
@@ -92,7 +93,6 @@ while True:
 
     elif event == "Submit":
         if values["-IN-"]:
-            progress = window["-PROGRESS-BAR-"]  # Get the progress bar element
             if values["-WMV-"]:
                 codec = "wmv1"
                 extension = ".wmv"
@@ -109,9 +109,17 @@ while True:
                 codec = "libmp3lame"
                 extension = ".mp3"
 
-            converter(codec, extension)
+            progress = window["-PROGRESS-BAR-"]  # Get the progress bar element
+
+            # Create a new thread for the conversion process
+            thread = threading.Thread(target=converter, args=(codec, extension))
+            thread.start()
 
         else:
             window["-MESSAGE-"].update("No file selected.")
+
+    elif event == '-UPDATE_PROGRESS-':
+        # Update the progress bar value
+        progress.update(values[event])
 
 window.close()
