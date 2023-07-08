@@ -3,6 +3,14 @@ from tkinterdnd2 import *
 import data
 
 
+def show_info():
+    pass
+
+
+def show_settings():
+    pass
+
+
 # def use_ffmpeg(input_file, output_file, video_codec):
 #     """Convert a file with ffmpeg"""
 #     # Check if the output file already exists
@@ -60,7 +68,8 @@ info_button = Button(
     image=info_image,
     bg=data.colors[2],
     activebackground=data.colors[2],
-    borderwidth=0
+    borderwidth=0,
+    command=show_info
 )
 info_button.place(x=392, y=15)
 
@@ -69,7 +78,8 @@ settings_button = Button(
     image=settings_image,
     bg=data.colors[2],
     activebackground=data.colors[2],
-    borderwidth=0
+    borderwidth=0,
+    command=show_settings
 )
 settings_button.place(x=421, y=15)
 
