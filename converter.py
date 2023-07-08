@@ -83,4 +83,39 @@ settings_button = Button(
 )
 settings_button.place(x=421, y=15)
 
+browse_image = PhotoImage(file='./images/browse_button.png')
+browse_button = Button(
+    image=browse_image,
+    bg=data.colors[2],
+    activebackground=data.colors[2],
+    borderwidth=0
+)
+browse_button.place(x=32, y=335)
+
+convert_image = PhotoImage(file='./images/convert_button.png')
+convert_button = Button(
+    image=convert_image,
+    bg=data.colors[2],
+    activebackground=data.colors[2],
+    borderwidth=0
+)
+convert_button.place(x=188, y=335)
+
+clear_image = PhotoImage(file='./images/clear_button.png')
+clear_button = Button(
+    image=clear_image,
+    bg=data.colors[2],
+    activebackground=data.colors[2],
+    borderwidth=0
+)
+clear_button.place(x=345, y=335)
+
+message_label = Label(
+    text="test",
+    font=(data.font, 11),
+    fg=data.colors[3],
+    bg=data.colors[2]
+)
+message_label.place(x=5, y=396)
+
 root.mainloop()
