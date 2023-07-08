@@ -64,5 +64,13 @@ info_button = Button(
 )
 info_button.place(x=392, y=15)
 
+settings_image = PhotoImage(file='./images/settings_icon.png')
+settings_button = Button(
+    image=settings_image,
+    bg=data.colors[2],
+    activebackground=data.colors[2],
+    borderwidth=0
+)
+settings_button.place(x=421, y=15)
 
 root.mainloop()
