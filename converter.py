@@ -11,6 +11,18 @@ def show_settings():
     pass
 
 
+def browse():
+    pass
+
+
+def clear():
+    pass
+
+
+def convert():
+    pass
+
+
 # def use_ffmpeg(input_file, output_file, video_codec):
 #     """Convert a file with ffmpeg"""
 #     # Check if the output file already exists
