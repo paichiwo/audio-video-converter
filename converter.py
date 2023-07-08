@@ -55,5 +55,14 @@ version_label = Label(
 )
 version_label.place(x=45, y=10)
 
+info_image = PhotoImage(file='./images/info_icon.png')
+info_button = Button(
+    image=info_image,
+    bg=data.colors[2],
+    activebackground=data.colors[2],
+    borderwidth=0
+)
+info_button.place(x=392, y=15)
+
 
 root.mainloop()
