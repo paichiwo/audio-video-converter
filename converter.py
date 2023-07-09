@@ -50,7 +50,6 @@ def convert():
 #     except FileNotFoundError:
 #         print("No ffmpeg found")
 
-
 root = TkinterDnD.Tk()
 root.title(f"Audio-Video Converter v{data.version}")
 root.iconbitmap('./images/audio-video_converter_icon_512x512.ico')

@@ -95,11 +95,13 @@ def showsettings():
             json.dump({'output_folder': output_folder}, file)
         settings_info_label.configure(text="Settings saved")
 
-
     def load_settings():
-        with open('settings.json', 'r') as file:
-            settings = json.load(file)
-            return settings['output_folder']
+        try:
+            with open('settings.json', 'r') as file:
+                settings = json.load(file)
+                return settings['output_folder']
+        except json.decoder.JSONDecodeError:
+            return "C:/Users/"
 
     sett = Tk()
     sett.title("Settings")
@@ -186,4 +188,3 @@ def showsettings():
     settings_info_label.place(x=10, y=278)
 
     sett.mainloop()
-
