@@ -23,6 +23,7 @@ def showinfo():
     """Create a new tkinter window with information about the application"""
     info = Tk()
     info.title("About")
+    info.iconbitmap('./images/audio-video_converter_icon_512x512.ico')
     info.configure(bg=data.colors[2])
     center_window(info, 480, 500)
 

@@ -51,7 +51,8 @@ def convert():
 
 
 root = TkinterDnD.Tk()
-root.title("Audio-Video Converter")
+root.title(f"Audio-Video Converter v{data.version}")
+root.iconbitmap('./images/audio-video_converter_icon_512x512.ico')
 root.configure(bg=data.colors[2])
 center_window(root, 480, 420)
 
@@ -63,13 +64,6 @@ background_label = Label(
     root,
     image=background_image)
 background_label.pack()
-
-version_label = Label(
-    text=f"Audio-Video Converter v{data.version}",
-    font=(data.font, 12),
-    fg=data.colors[3],
-    bg=data.colors[2])
-version_label.place(x=45, y=10)
 
 info_image = PhotoImage(
     master=root,

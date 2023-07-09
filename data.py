@@ -9,7 +9,7 @@ github_link = "https://github.com/paichiwo/"
 
 info_header = f"""
 AUDIO-VIDEO CONVERTER v{version}
-by Paichiwo
+Paichiwo
 2023
 """
 
