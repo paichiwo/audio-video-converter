@@ -1,3 +1,4 @@
+import json
 from tkinter import PhotoImage, Label, Listbox, Button, Radiobutton
 from tkinterdnd2 import *
 import data
@@ -129,5 +130,19 @@ message_label = Label(
     fg=data.colors[3],
     bg=data.colors[2])
 message_label.place(x=5, y=396)
+
+
+# def read_settings():
+#     """Read the output folder path from the JSON file"""
+#     try:
+#         with open('settings.json', 'r') as file:
+#             settings = json.load(file)
+#         folder_selected = settings['output_folder']
+#         return folder_selected
+#     except FileNotFoundError:
+#         return None
+#
+#
+# print(read_settings())
 
 root.mainloop()
