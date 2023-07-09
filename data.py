@@ -8,13 +8,13 @@ github_link = "https://github.com/paichiwo/"
 
 
 info_header = f"""
-AUDIO VIDEO CONVERTER v{version}
+AUDIO-VIDEO CONVERTER v{version}
 by Paichiwo
 2023
 """
 
 info_text = """
-Thank you for your interest in my Audio/Video Converter application. 
+Thank you for your interest in my Audio-Video Converter application. 
 Application is coded in Python and it's utilizing 'FFmpeg' capabilities.
 
 What is FFmpeg?
