@@ -1,7 +1,7 @@
 from tkinter import PhotoImage, Label, Listbox, Button, Radiobutton
 from tkinterdnd2 import *
 import data
-from helpers import showinfo
+from helpers import center_window, showinfo, showsettings
 
 
 def browse():
@@ -52,8 +52,8 @@ def convert():
 
 root = TkinterDnD.Tk()
 root.title("Audio-Video Converter")
-root.geometry("480x420")
 root.configure(bg=data.colors[2])
+center_window(root, 480, 420)
 
 
 background_image = PhotoImage(
@@ -92,7 +92,7 @@ settings_button = Button(
     bg=data.colors[2],
     activebackground=data.colors[2],
     borderwidth=0,
-    command=show_settings)
+    command=showsettings)
 settings_button.place(x=421, y=15)
 
 browse_image = PhotoImage(

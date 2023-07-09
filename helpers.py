@@ -3,17 +3,28 @@ from tkinter import Tk, PhotoImage, Label
 import data
 
 
+def center_window(window, width, height):
+    """Create window in the center of the screen, using desired dimensions"""
+    screen_width = window.winfo_screenwidth()
+    screen_height = window.winfo_screenheight()
+
+    x = (screen_width - width) // 2
+    y = (screen_height - height) // 2
+
+    window.geometry(f"{width}x{height}+{x}+{y}")
+
+
 def open_url(url):
     """Open given link in the web browser"""
     webbrowser.open(url)
 
 
 def showinfo():
-    """Create a new tkinter window with information about the application."""
+    """Create a new tkinter window with information about the application"""
     info = Tk()
     info.title("About")
-    info.geometry("480x500")
     info.configure(bg=data.colors[2])
+    center_window(info, 480, 500)
 
     about_app_header = Label(
         info,
