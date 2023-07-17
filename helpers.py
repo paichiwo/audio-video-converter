@@ -39,7 +39,7 @@ def showinfo():
 
     app_icon_image = PhotoImage(
         master=info,
-        file='images/audio-video_converter_icon_64x64.png')
+        file='./images/audio-video_converter_icon_64x64.png')
     app_icon_label = Label(
         info,
         image=app_icon_image,
