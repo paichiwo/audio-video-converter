@@ -1,54 +1,48 @@
 import json
-from tkinter import PhotoImage, Label, Listbox, Button, Radiobutton
+from pathlib import Path
+from tkinter import PhotoImage, Label, Listbox, Button, Radiobutton, messagebox, filedialog
 from tkinterdnd2 import *
 import data
 from helpers import center_window, showinfo, showsettings
+import os
+import subprocess
 
 
 def browse():
-    pass
+    """Get path for chosen file to be converted"""
+    filename = filedialog.askopenfilename()
+    if filename:
+        paths_listbox.insert('end', filename)
 
 
 def clear():
-    pass
+    """Clear the path window"""
+    paths_listbox.delete(0, 'end')
 
 
-def convert():
-    pass
+def use_ffmpeg(input_file, output_file, video_codec):
+    """Use ffmpeg for conversion"""
+    ffmpeg_command = ['./executables/ffmpeg', '-i', input_file, '-c:v', video_codec, '-y', output_file]
+    process = subprocess.Popen(ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+    output, error = process.communicate()
+    if process.returncode == 0:
+        print('Conversion completed successfully')
+    else:
+        print(output)
+        print(error)
+        print(process.returncode)
 
 
-# def use_ffmpeg(input_file, output_file, video_codec):
-#     """Convert a file with ffmpeg"""
-#     # Check if the output file already exists
-#     if os.path.exists(output_file):
-#         # Ask the user if they want to overwrite the file
-#         choice = psg.popup_yes_no("Overwrite?")
-#         if choice != 'Yes':
-#             # User does not want to overwrite, exit the function
-#             print("Conversion canceled.")
-#             return
-#
-#     ffmpeg_command = ["executables/ffmpeg", "-i", input_file, "-c:v", video_codec, "-y", output_file]
-#     process = subprocess.Popen(ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-#     output, error = process.communicate()
-#     if process.returncode == 0:
-#         # Conversion successful
-#         print("Conversion completed successfully!")
-#     else:
-#         print(output)
-#         print(error)
-#         print(process.returncode)
+def convert(video_codec='libmp3lame', file_extension='.mp3'):
+    """Call for conversion."""
+    input_file = paths_listbox.get('active')
+    name, ext = os.path.splitext(input_file)
+    output_file = name + "_convert" + file_extension
+    try:
+        use_ffmpeg(input_file, output_file, video_codec)
+    except FileNotFoundError:
+        print("No ffmpeg found")
 
-
-# def converter(video_codec, file_extension):
-#     """Call for conversion."""
-#     input_file = values["-IN-"]
-#     name, ext = os.path.splitext(input_file)
-#     output_file = name + "_convert" + file_extension
-#     try:
-#         use_ffmpeg(input_file, output_file, video_codec)
-#     except FileNotFoundError:
-#         print("No ffmpeg found")
 
 root = TkinterDnD.Tk()
 root.title(f"Audio-Video Converter v{data.version}")
@@ -89,6 +83,15 @@ settings_button = Button(
     command=showsettings)
 settings_button.place(x=421, y=15)
 
+paths_listbox = Listbox(
+    root,
+    bg=data.colors[0],
+    width=65,
+    height=12,
+    borderwidth=0,
+    highlightthickness=0)
+paths_listbox.place(x=44, y=60)
+
 browse_image = PhotoImage(
     master=root,
     file='./images/browse_button.png')
@@ -97,7 +100,8 @@ browse_button = Button(
     image=browse_image,
     bg=data.colors[2],
     activebackground=data.colors[2],
-    borderwidth=0)
+    borderwidth=0,
+    command=browse)
 browse_button.place(x=32, y=335)
 
 convert_image = PhotoImage(
@@ -108,7 +112,7 @@ convert_button = Button(
     image=convert_image,
     bg=data.colors[2],
     activebackground=data.colors[2],
-    borderwidth=0)
+    borderwidth=0,command=convert)
 convert_button.place(x=188, y=335)
 
 clear_image = PhotoImage(
