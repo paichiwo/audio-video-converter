@@ -20,6 +20,13 @@ def open_url(url):
     webbrowser.open(url)
 
 
+def load_codecs_from_json():
+    """Get dictionary of file formats with corresponding codecs"""
+    with open('codecs.json', 'r') as file:
+        codecs = json.load(file)
+    return codecs
+
+
 def showinfo():
     """Create a new tkinter window with information about the application"""
     info = Tk()

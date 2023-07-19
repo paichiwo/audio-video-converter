@@ -1,9 +1,9 @@
 import os
 import data
 import subprocess
-from tkinter import PhotoImage, Label, Listbox, Button, Radiobutton, messagebox, filedialog
+from tkinter import PhotoImage, Label, Listbox, Button, filedialog, ttk, StringVar
 from tkinterdnd2 import *
-from helpers import center_window, showinfo, showsettings
+from helpers import center_window, load_codecs_from_json, showinfo, showsettings
 
 
 def use_ffmpeg(input_file, output_file, video_codec):
@@ -21,11 +21,12 @@ def use_ffmpeg(input_file, output_file, video_codec):
 
 def converter_window():
     """Main window where the conversion takes place"""
+
     def browse():
         """Get a path for chosen file to be converted"""
         filename = filedialog.askopenfilename()
-        if filename[-4:] in data.media_file_formats:
-            paths_listbox.insert('end', filename)
+        if filename.endswith(tuple(data.media_file_formats)):
+            paths_listbox.insert('end', filename.split('/')[-1])
         else:
             message_label.configure(text="This format is not allowed")
 
@@ -33,13 +34,17 @@ def converter_window():
         """Clear the path window"""
         paths_listbox.delete(0, 'end')
 
-    def convert(video_codec='libmp3lame', file_extension='.mp3'):
-        """Call for conversion."""
+    def convert():
+        """Call for conversion"""
+
         input_file = paths_listbox.get('active')
         name, ext = os.path.splitext(input_file)
-        output_file = name + "_convert" + file_extension
+        selected_format = format_box.get()
+        output_file = name + "_convert" + selected_format
         try:
-            use_ffmpeg(input_file, output_file, video_codec)
+            codecs = load_codecs_from_json()
+            codec_to_be_used = codecs[selected_format]
+            use_ffmpeg(input_file, output_file, codec_to_be_used)
         except FileNotFoundError:
             print("No ffmpeg found")
 
@@ -90,6 +95,13 @@ def converter_window():
         borderwidth=0,
         highlightthickness=0)
     paths_listbox.place(x=44, y=60)
+
+    extensions = StringVar()
+    format_box = ttk.Combobox(
+        root,
+        textvariable=extensions)
+    format_box['values'] = sorted(data.media_file_formats)
+    format_box.place(x=170, y=290)
 
     browse_image = PhotoImage(
         master=root,
