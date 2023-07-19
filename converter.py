@@ -26,7 +26,7 @@ def converter_window():
         """Get a path for chosen file to be converted"""
         filename = filedialog.askopenfilename()
         if filename.endswith(tuple(data.media_file_formats)):
-            paths_listbox.insert('end', filename.split('/')[-1])
+            paths_listbox.insert('end', filename)
         else:
             message_label.configure(text="This format is not allowed")
 
@@ -41,13 +41,15 @@ def converter_window():
         name, ext = os.path.splitext(input_file)
         selected_format = format_box.get()
         output_file = name + "_convert" + selected_format
+        codecs = load_codecs_from_json()
+        codec_to_be_used = codecs[selected_format]
+
         try:
-            codecs = load_codecs_from_json()
-            codec_to_be_used = codecs[selected_format]
             use_ffmpeg(input_file, output_file, codec_to_be_used)
         except FileNotFoundError:
             print("No ffmpeg found")
 
+    # Window elements
     root = TkinterDnD.Tk()
     center_window(root, 480, 420)
     root.title(f"Audio-Video Converter v{data.version}")
@@ -90,6 +92,7 @@ def converter_window():
     paths_listbox = Listbox(
         root,
         bg=data.colors[0],
+        fg=data.colors[3],
         width=65,
         height=12,
         borderwidth=0,
@@ -99,9 +102,12 @@ def converter_window():
     extensions = StringVar()
     format_box = ttk.Combobox(
         root,
-        textvariable=extensions)
+        textvariable=extensions,
+        state='readonly',
+        font=(data.font, 9), width=6)
     format_box['values'] = sorted(data.media_file_formats)
-    format_box.place(x=170, y=290)
+    format_box.current(9)
+    format_box.place(x=209, y=290)
 
     browse_image = PhotoImage(
         master=root,

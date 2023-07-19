@@ -112,7 +112,7 @@ def showsettings():
             return "C:/Users/"
 
     sett = Tk()
-    center_window(sett, 480, 300)
+    sett.geometry("480x250")
     sett.title("Settings")
     sett.iconbitmap('./images/audio-video_converter_icon_512x512.ico')
     sett.configure(bg=data.colors[2])
@@ -158,7 +158,7 @@ def showsettings():
     output_path_label = Label(
         sett,
         text=load_settings(),
-        font=(data.font, 11),
+        font=(data.font, 10),
         fg=data.colors[3],
         bg=data.colors[0],
         justify='left')
