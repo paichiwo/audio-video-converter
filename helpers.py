@@ -23,10 +23,11 @@ def open_url(url):
 def showinfo():
     """Create a new tkinter window with information about the application"""
     info = Tk()
+    center_window(info, 480, 500)
     info.title("About")
     info.iconbitmap('./images/audio-video_converter_icon_512x512.ico')
     info.configure(bg=data.colors[2])
-    center_window(info, 480, 500)
+    info.resizable(False, False)
 
     about_app_header = Label(
         info,
@@ -104,10 +105,11 @@ def showsettings():
             return "C:/Users/"
 
     sett = Tk()
+    center_window(sett, 480, 300)
     sett.title("Settings")
     sett.iconbitmap('./images/audio-video_converter_icon_512x512.ico')
     sett.configure(bg=data.colors[2])
-    center_window(sett, 480, 300)
+    sett.resizable(False, False)
 
     settings_header = Label(
         sett,

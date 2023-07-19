@@ -6,21 +6,6 @@ from tkinterdnd2 import *
 from helpers import center_window, showinfo, showsettings
 
 
-def browse():
-    """Get path for chosen file to be converted"""
-    filename = filedialog.askopenfilename()
-    for extension in data.media_file_formats:
-        if filename.endswith(extension):
-            paths_listbox.insert('end', filename)
-        else:
-            message_label.configure(text="This format is not allowed")
-
-
-def clear():
-    """Clear the path window"""
-    paths_listbox.delete(0, 'end')
-
-
 def use_ffmpeg(input_file, output_file, video_codec):
     """Use ffmpeg for conversion"""
     ffmpeg_command = ['./executables/ffmpeg', '-i', input_file, '-c:v', video_codec, '-y', output_file]
@@ -34,27 +19,36 @@ def use_ffmpeg(input_file, output_file, video_codec):
         print(process.returncode)
 
 
-def convert(video_codec='libmp3lame', file_extension='.mp3'):
-    """Call for conversion."""
-    input_file = paths_listbox.get('active')
-    name, ext = os.path.splitext(input_file)
-    output_file = name + "_convert" + file_extension
-    try:
-        use_ffmpeg(input_file, output_file, video_codec)
-    except FileNotFoundError:
-        print("No ffmpeg found")
-
-
 def converter_window():
+    """Main window where the conversion takes place"""
+    def browse():
+        """Get a path for chosen file to be converted"""
+        filename = filedialog.askopenfilename()
+        if filename[-4:] in data.media_file_formats:
+            paths_listbox.insert('end', filename)
+        else:
+            message_label.configure(text="This format is not allowed")
 
-    global paths_listbox
-    global message_label
+    def clear():
+        """Clear the path window"""
+        paths_listbox.delete(0, 'end')
+
+    def convert(video_codec='libmp3lame', file_extension='.mp3'):
+        """Call for conversion."""
+        input_file = paths_listbox.get('active')
+        name, ext = os.path.splitext(input_file)
+        output_file = name + "_convert" + file_extension
+        try:
+            use_ffmpeg(input_file, output_file, video_codec)
+        except FileNotFoundError:
+            print("No ffmpeg found")
 
     root = TkinterDnD.Tk()
+    center_window(root, 480, 420)
     root.title(f"Audio-Video Converter v{data.version}")
     root.iconbitmap('./images/audio-video_converter_icon_512x512.ico')
     root.configure(bg=data.colors[2])
-    center_window(root, 480, 420)
+    root.resizable(False, False)
 
     background_image = PhotoImage(
         master=root,
@@ -129,7 +123,8 @@ def converter_window():
         image=clear_image,
         bg=data.colors[2],
         activebackground=data.colors[2],
-        borderwidth=0)
+        borderwidth=0,
+        command=clear)
     clear_button.place(x=345, y=335)
 
     message_label = Label(
