@@ -4,6 +4,9 @@ version = "1.0"
 font = "Calibri"
 colors = ['#087e8b', '#ff5a5f', '#3c3c3c', '#f5f5f5']
 
+media_file_formats = ['.webm', '.mpg', '.mp2', '.mpeg', '.mpe', '.mpv', '.ogg', '.mp4', '.m4p', '.m4v', '.avi', '.wmv',
+                      '.mov', '.qt', '.flv', '.swf', '.mp3', '.flac', 'wav', '.aac', 'aiff']
+
 github_link = "https://github.com/paichiwo/"
 
 

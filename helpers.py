@@ -107,7 +107,7 @@ def showsettings():
     sett.title("Settings")
     sett.iconbitmap('./images/audio-video_converter_icon_512x512.ico')
     sett.configure(bg=data.colors[2])
-    sett.geometry("480x300")
+    center_window(sett, 480, 300)
 
     settings_header = Label(
         sett,
