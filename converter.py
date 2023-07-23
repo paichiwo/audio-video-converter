@@ -106,7 +106,7 @@ def converter_window():
         state='readonly',
         font=(data.font, 9), width=6)
     format_box['values'] = sorted(data.media_file_formats)
-    format_box.current(9)
+    format_box.current(10)
     format_box.place(x=209, y=290)
 
     browse_image = PhotoImage(

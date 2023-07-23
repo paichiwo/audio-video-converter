@@ -18,5 +18,6 @@
     ".swf": "flv",
     ".wav": "pcm_s16le",
     ".webm": "vp9",
-    ".wmv": "wmv2"
+    ".wmv": "wmv2",
+    ".m4a": "libfdk_aac"
 }
