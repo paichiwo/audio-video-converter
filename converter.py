@@ -1,15 +1,39 @@
 import os
+import threading
+
 import data
 import subprocess
-from tkinter import PhotoImage, Label, Listbox, Button, filedialog, ttk, StringVar
+from tkinter import PhotoImage, Label, Listbox, Button, filedialog, ttk, StringVar, DoubleVar
 from tkinterdnd2 import *
 from helpers import center_window, load_codecs_from_json, showinfo, showsettings
 
 
-def use_ffmpeg(input_file, output_file, video_codec):
+import re
+
+
+def use_ffmpeg(input_file, output_file, video_codec, progress_callback):
     """Use ffmpeg for conversion"""
     ffmpeg_command = ['./executables/ffmpeg', '-i', input_file, '-c:v', video_codec, '-y', output_file]
     process = subprocess.Popen(ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+
+    duration = None
+    for line in process.stderr:
+        # Extract duration information from ffmpeg output
+        if 'Duration: ' in line:
+            match = re.search(r'Duration:\s+(\d{2}):(\d{2}):(\d{2}).\d+', line)
+            if match:
+                hours, minutes, seconds = map(int, match.groups())
+                duration = hours * 3600 + minutes * 60 + seconds
+
+        # Extract time progress information from ffmpeg output
+        if 'time=' in line and duration:
+            match = re.search(r'time=\s*(\d{2}):(\d{2}):(\d{2}).\d+', line)
+            if match:
+                hours, minutes, seconds = map(int, match.groups())
+                current_time = hours * 3600 + minutes * 60 + seconds
+                progress = (current_time / duration) * 100
+                progress_callback(progress)
+
     output, error = process.communicate()
     if process.returncode == 0:
         print('Conversion completed successfully')
@@ -17,6 +41,7 @@ def use_ffmpeg(input_file, output_file, video_codec):
         print(output)
         print(error)
         print(process.returncode)
+
 
 
 def converter_window():
@@ -37,17 +62,26 @@ def converter_window():
     def convert():
         """Call for conversion"""
 
-        input_file = paths_listbox.get('active')
-        name, ext = os.path.splitext(input_file)
-        selected_format = format_box.get()
-        output_file = name + "_convert" + selected_format
-        codecs = load_codecs_from_json()
-        codec_to_be_used = codecs[selected_format]
+        def update_progress(progress):
+            progress_var.set(progress)
+            root.update_idletasks()
 
-        try:
-            use_ffmpeg(input_file, output_file, codec_to_be_used)
-        except FileNotFoundError:
-            print("No ffmpeg found")
+        def convert_in_thread():
+            input_file = paths_listbox.get('active')
+            name, ext = os.path.splitext(input_file)
+            selected_format = format_box.get()
+            output_file = name + "_convert" + selected_format
+            codecs = load_codecs_from_json()
+            codec_to_be_used = codecs[selected_format]
+
+            try:
+                use_ffmpeg(input_file, output_file, codec_to_be_used, update_progress)
+            except FileNotFoundError:
+                print("No ffmpeg found")
+
+        # Start the conversion in a separate thread
+        thread = threading.Thread(target=convert_in_thread)
+        thread.start()
 
     # Window elements
     root = TkinterDnD.Tk()
@@ -108,6 +142,14 @@ def converter_window():
     format_box['values'] = sorted(data.media_file_formats)
     format_box.current(10)
     format_box.place(x=209, y=290)
+
+    progress_var = DoubleVar()
+    progress_bar = ttk.Progressbar(
+        root,
+        orient='horizontal',
+        mode='determinate',
+        variable=progress_var)
+    progress_bar.place(x=0, y=395, width=480, height=5)
 
     browse_image = PhotoImage(
         master=root,
