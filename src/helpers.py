@@ -29,7 +29,7 @@ def get_downloads_folder_path():
 
 def load_codecs_from_json():
     """Get dictionary of file formats with corresponding codecs"""
-    with open('../data/codecs.json', 'r') as file:
+    with open('./data/codecs.json', 'r') as file:
         codecs = json.load(file)
     return codecs
 

@@ -23,7 +23,7 @@ def showinfo():
 
     app_icon_image = PhotoImage(
         master=info,
-        file='../images/audio-video_converter_icon_64x64.png')
+        file='./images/audio-video_converter_icon_64x64.png')
     app_icon_label = Label(
         info,
         image=app_icon_image,
@@ -41,7 +41,7 @@ def showinfo():
 
     github_image = PhotoImage(
         master=info,
-        file='../images/github_icon_32x32.png')
+        file='./images/github_icon_32x32.png')
     github_image_label = Label(
         info,
         image=github_image,
