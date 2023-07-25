@@ -2,7 +2,7 @@ import os
 import subprocess
 import threading
 from tkinterdnd2 import *
-from tkinter import PhotoImage, Label, Listbox, Button, filedialog, ttk, StringVar, DoubleVar
+from tkinter import PhotoImage, Label, Listbox, Button, filedialog, ttk, StringVar, DoubleVar, messagebox
 import src.config as data
 from src.info_window import showinfo
 from src.settings_window import showsettings
@@ -25,9 +25,11 @@ def converter_window():
         if process.returncode == 0:
             message_label.configure(text="Conversion completed successfully")
         else:
-            print(output)
-            print(error)
-            print(process.returncode)
+            error_message = f"""Error occurred during conversion:\n\n
+            Output:\n{output}\n\n
+            Error:\n{error}\n\n
+            Return Code: {process.returncode}"""
+            messagebox.showerror("Conversion Error", error_message)
 
     def browse():
         """Get a path for chosen file to be converted"""
