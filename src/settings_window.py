@@ -15,16 +15,16 @@ def showsettings():
 
     def save_settings():
         output_folder = output_path_label.cget('text')
-        with open('../data/settings.json', 'w') as file:
+        with open('./data/settings.json', 'w') as file:
             json.dump({'output_folder': output_folder}, file)
         settings_info_label.configure(text="Settings saved")
 
     def load_settings():
         try:
-            with open('../data/settings.json', 'r') as file:
+            with open('./data/settings.json', 'r') as file:
                 settings = json.load(file)
                 return settings['output_folder']
-        except json.decoder.JSONDecodeError:
+        except (json.decoder.JSONDecodeError, FileNotFoundError):
             output_folder = get_downloads_folder_path()
             return output_folder
 
@@ -55,7 +55,7 @@ def showsettings():
 
     output_path_image = PhotoImage(
         master=sett,
-        file='../images/filepath.png')
+        file='./images/filepath.png')
     output_path_image_label = Label(
         sett,
         image=output_path_image,
@@ -65,7 +65,7 @@ def showsettings():
 
     folder_icon_image = PhotoImage(
         master=sett,
-        file='../images/folder_icon.png')
+        file='./images/folder_icon.png')
     folder_icon_label = Label(
         sett,
         image=folder_icon_image,
@@ -83,7 +83,7 @@ def showsettings():
 
     output_path_button_image = PhotoImage(
         master=sett,
-        file='../images/plus_16x16.png')
+        file='./images/plus_16x16.png')
     output_path_button = Button(
         sett,
         image=output_path_button_image,
@@ -95,7 +95,7 @@ def showsettings():
 
     save_button_image = PhotoImage(
         master=sett,
-        file="../images/save_button.png")
+        file="./images/save_button.png")
     save_button = Button(
         sett,
         image=save_button_image,
