@@ -1,33 +1,33 @@
 import os
 import subprocess
 import threading
+from tkinterdnd2 import *
+from tkinter import PhotoImage, Label, Listbox, Button, filedialog, ttk, StringVar, DoubleVar
 import src.config as data
 from src.info_window import showinfo
 from src.settings_window import showsettings
-from tkinterdnd2 import *
-from tkinter import PhotoImage, Label, Listbox, Button, filedialog, ttk, StringVar, DoubleVar
 from src.helpers import center_window, load_codecs_from_json, extract_duration, track_progress
-
-
-def use_ffmpeg(input_file, output_file, video_codec, progress_callback):
-    """Use ffmpeg for conversion"""
-    ffmpeg_command = ['./executables/ffmpeg', '-i', input_file, '-c:v', video_codec, '-y', output_file]
-    process = subprocess.Popen(ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-
-    duration = extract_duration(process.stderr)
-    track_progress(process.stderr, duration, progress_callback)
-
-    output, error = process.communicate()
-    if process.returncode == 0:
-        print('Conversion completed successfully')
-    else:
-        print(output)
-        print(error)
-        print(process.returncode)
 
 
 def converter_window():
     """Main window where the conversion takes place"""
+
+    def use_ffmpeg(input_file, output_file, video_codec, progress_callback):
+        """Use ffmpeg for conversion"""
+        ffmpeg_command = ['./executables/ffmpeg', '-i', input_file, '-c:v', video_codec, '-y', output_file]
+        process = subprocess.Popen(ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                   universal_newlines=True)
+
+        duration = extract_duration(process.stderr)
+        track_progress(process.stderr, duration, progress_callback)
+
+        output, error = process.communicate()
+        if process.returncode == 0:
+            message_label.configure(text="Conversion completed successfully")
+        else:
+            print(output)
+            print(error)
+            print(process.returncode)
 
     def browse():
         """Get a path for chosen file to be converted"""
