@@ -1,7 +1,9 @@
+import re
 import json
+import subprocess
 import webbrowser
-from tkinter import Tk, PhotoImage, Label, Button, filedialog
 import data
+from tkinter import Tk, PhotoImage, Label, Button, filedialog
 
 
 def center_window(window, width, height):
@@ -25,6 +27,45 @@ def load_codecs_from_json():
     with open('codecs.json', 'r') as file:
         codecs = json.load(file)
     return codecs
+
+
+def extract_duration(ffmpeg_output):
+    """Extract duration information from ffmpeg output"""
+    for line in ffmpeg_output:
+        if 'Duration: ' in line:
+            match = re.search(r'Duration:\s+(\d{2}):(\d{2}):(\d{2}).\d+', line)
+            if match:
+                hours, minutes, seconds = map(int, match.groups())
+                return hours * 3600 + minutes * 60 + seconds
+
+
+def track_progress(ffmpeg_output, duration, progress_callback):
+    """Extract time progress information from ffmpeg output and call the progress_callback"""
+    for line in ffmpeg_output:
+        if 'time=' in line and duration:
+            match = re.search(r'time=\s*(\d{2}):(\d{2}):(\d{2}).\d+', line)
+            if match:
+                hours, minutes, seconds = map(int, match.groups())
+                current_time = hours * 3600 + minutes * 60 + seconds
+                progress = (current_time / duration) * 100
+                progress_callback(progress)
+
+
+def use_ffmpeg(input_file, output_file, video_codec, progress_callback):
+    """Use ffmpeg for conversion"""
+    ffmpeg_command = ['./executables/ffmpeg', '-i', input_file, '-c:v', video_codec, '-y', output_file]
+    process = subprocess.Popen(ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+
+    duration = extract_duration(process.stderr)
+    track_progress(process.stderr, duration, progress_callback)
+
+    output, error = process.communicate()
+    if process.returncode == 0:
+        print('Conversion completed successfully')
+    else:
+        print(output)
+        print(error)
+        print(process.returncode)
 
 
 def showinfo():

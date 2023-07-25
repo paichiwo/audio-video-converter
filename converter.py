@@ -1,47 +1,9 @@
 import os
 import threading
-
 import data
-import subprocess
-from tkinter import PhotoImage, Label, Listbox, Button, filedialog, ttk, StringVar, DoubleVar
 from tkinterdnd2 import *
-from helpers import center_window, load_codecs_from_json, showinfo, showsettings
-
-
-import re
-
-
-def use_ffmpeg(input_file, output_file, video_codec, progress_callback):
-    """Use ffmpeg for conversion"""
-    ffmpeg_command = ['./executables/ffmpeg', '-i', input_file, '-c:v', video_codec, '-y', output_file]
-    process = subprocess.Popen(ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-
-    duration = None
-    for line in process.stderr:
-        # Extract duration information from ffmpeg output
-        if 'Duration: ' in line:
-            match = re.search(r'Duration:\s+(\d{2}):(\d{2}):(\d{2}).\d+', line)
-            if match:
-                hours, minutes, seconds = map(int, match.groups())
-                duration = hours * 3600 + minutes * 60 + seconds
-
-        # Extract time progress information from ffmpeg output
-        if 'time=' in line and duration:
-            match = re.search(r'time=\s*(\d{2}):(\d{2}):(\d{2}).\d+', line)
-            if match:
-                hours, minutes, seconds = map(int, match.groups())
-                current_time = hours * 3600 + minutes * 60 + seconds
-                progress = (current_time / duration) * 100
-                progress_callback(progress)
-
-    output, error = process.communicate()
-    if process.returncode == 0:
-        print('Conversion completed successfully')
-    else:
-        print(output)
-        print(error)
-        print(process.returncode)
-
+from tkinter import PhotoImage, Label, Listbox, Button, filedialog, ttk, StringVar, DoubleVar
+from helpers import center_window, load_codecs_from_json, showinfo, showsettings, use_ffmpeg
 
 
 def converter_window():
