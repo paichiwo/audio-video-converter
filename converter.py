@@ -1,9 +1,29 @@
 import os
+import subprocess
 import threading
-import data
+import src.config as data
+from src.info_window import showinfo
+from src.settings_window import showsettings
 from tkinterdnd2 import *
 from tkinter import PhotoImage, Label, Listbox, Button, filedialog, ttk, StringVar, DoubleVar
-from helpers import center_window, load_codecs_from_json, showinfo, showsettings, use_ffmpeg
+from src.helpers import center_window, load_codecs_from_json, extract_duration, track_progress
+
+
+def use_ffmpeg(input_file, output_file, video_codec, progress_callback):
+    """Use ffmpeg for conversion"""
+    ffmpeg_command = ['./executables/ffmpeg', '-i', input_file, '-c:v', video_codec, '-y', output_file]
+    process = subprocess.Popen(ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+
+    duration = extract_duration(process.stderr)
+    track_progress(process.stderr, duration, progress_callback)
+
+    output, error = process.communicate()
+    if process.returncode == 0:
+        print('Conversion completed successfully')
+    else:
+        print(output)
+        print(error)
+        print(process.returncode)
 
 
 def converter_window():
@@ -152,10 +172,10 @@ def converter_window():
     message_label = Label(
         root,
         text="test",
-        font=(data.font, 11),
+        font=(data.font, 10),
         fg=data.colors[3],
         bg=data.colors[2])
-    message_label.place(x=5, y=396)
+    message_label.place(x=5, y=400)
 
     root.mainloop()
 
