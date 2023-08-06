@@ -6,12 +6,13 @@ from tkinter import PhotoImage, Label, Listbox, Button, filedialog, ttk, StringV
 import src.config as data
 from src.info_window import showinfo
 from src.settings_window import showsettings
-from src.helpers import center_window, load_codecs_from_json, extract_duration, track_progress
+from src.helpers import center_window, load_codecs_from_json, extract_duration, track_progress, load_settings_from_json
 
 
-# fix bug with saving to the output_folder (now saves to the source file folder)
 # add support for multiple files
 # play with drag and drop - try implementing
+
+files_to_convert = []
 
 
 def converter_window():
@@ -19,6 +20,7 @@ def converter_window():
 
     def use_ffmpeg(input_file, output_file, video_codec, progress_callback):
         """Use ffmpeg for conversion"""
+        message_label.configure(text="Converting...")
         ffmpeg_command = ['./executables/ffmpeg', '-i', input_file, '-c:v', video_codec, '-y', output_file]
         process = subprocess.Popen(ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                    universal_newlines=True)
@@ -38,9 +40,14 @@ def converter_window():
 
     def browse():
         """Get a path for chosen file to be converted"""
+        files_to_convert.clear()
+        clear()
         filename = filedialog.askopenfilename()
         if filename.endswith(tuple(data.media_file_formats)):
-            paths_listbox.insert('end', filename.split("/")[-1])
+            files_to_convert.append(filename)
+            for file in files_to_convert:
+                paths_listbox.insert('end', file.split("/")[-1])
+                message_label.configure(text="")
         else:
             message_label.configure(text="This format is not allowed")
 
@@ -56,15 +63,17 @@ def converter_window():
             root.update_idletasks()
 
         def convert_in_thread():
-            input_file = paths_listbox.get('active')
+            input_file = files_to_convert[0]
             name, ext = os.path.splitext(input_file)
             selected_format = format_box.get()
-            output_file = name + "_convert" + selected_format
+            output_file = name.split('/')[-1] + "_convert" + selected_format
+            output_folder = load_settings_from_json()
+            output_path = os.path.join(output_folder, output_file)
             codecs = load_codecs_from_json()
             codec_to_be_used = codecs[selected_format]
 
             try:
-                use_ffmpeg(input_file, output_file, codec_to_be_used, update_progress)
+                use_ffmpeg(input_file, output_path, codec_to_be_used, update_progress)
             except FileNotFoundError:
                 print("No ffmpeg found")
 
@@ -178,7 +187,7 @@ def converter_window():
 
     message_label = Label(
         root,
-        text="test",
+        text="",
         font=(data.font, 10),
         fg=data.colors[3],
         bg=data.colors[2])
