@@ -9,6 +9,11 @@ from src.settings_window import showsettings
 from src.helpers import center_window, load_codecs_from_json, extract_duration, track_progress
 
 
+# fix bug with saving to the output_folder (now saves to the source file folder)
+# add support for multiple files
+# play with drag and drop - try implementing
+
+
 def converter_window():
     """Main window where the conversion takes place"""
 
