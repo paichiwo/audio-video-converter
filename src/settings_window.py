@@ -1,7 +1,6 @@
-import json
 import src.config as data
 from tkinter import Tk, filedialog, Label, PhotoImage, Button
-from src.helpers import get_downloads_folder_path
+from src.helpers import load_settings_from_json, save_settings_to_json
 
 
 def showsettings():
@@ -14,19 +13,10 @@ def showsettings():
         return
 
     def save_settings():
+        """Save settings callback"""
         output_folder = output_path_label.cget('text')
-        with open('./data/settings.json', 'w') as file:
-            json.dump({'output_folder': output_folder}, file)
+        save_settings_to_json(output_folder)
         settings_info_label.configure(text="Settings saved")
-
-    def load_settings():
-        try:
-            with open('./data/settings.json', 'r') as file:
-                settings = json.load(file)
-                return settings['output_folder']
-        except (json.decoder.JSONDecodeError, FileNotFoundError):
-            output_folder = get_downloads_folder_path()
-            return output_folder
 
     sett = Tk()
     sett.geometry("480x250")
@@ -74,7 +64,7 @@ def showsettings():
 
     output_path_label = Label(
         sett,
-        text=load_settings(),
+        text=load_settings_from_json(),
         font=(data.font, 10),
         fg=data.colors[3],
         bg=data.colors[0],
