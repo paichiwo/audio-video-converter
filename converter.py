@@ -35,7 +35,7 @@ def converter_window():
         """Get a path for chosen file to be converted"""
         filename = filedialog.askopenfilename()
         if filename.endswith(tuple(data.media_file_formats)):
-            paths_listbox.insert('end', filename)
+            paths_listbox.insert('end', filename.split("/")[-1])
         else:
             message_label.configure(text="This format is not allowed")
 
