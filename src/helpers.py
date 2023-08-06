@@ -54,3 +54,20 @@ def track_progress(ffmpeg_output, duration, progress_callback):
                 current_time = hours * 3600 + minutes * 60 + seconds
                 progress = (current_time / duration) * 100
                 progress_callback(progress)
+
+
+def save_settings_to_json(location):
+    """Save settings to json file"""
+    with open('./data/settings.json', 'w') as file:
+        json.dump({'output_folder': location}, file)
+
+
+def load_settings_from_json():
+    """Try loading settings from a json file or use Downloads folder in C:/Users/name/"""
+    try:
+        with open('./data/settings.json', 'r') as file:
+            settings = json.load(file)
+            return settings['output_folder']
+    except (json.decoder.JSONDecodeError, FileNotFoundError):
+        output_folder = get_downloads_folder_path()
+        return output_folder
