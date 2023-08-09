@@ -40,8 +40,7 @@ def converter_window():
 
     def browse():
         """Get a path for chosen file to be converted"""
-        files_to_convert.clear()
-        clear()
+        paths_listbox.delete(0, 'end')
         filename = filedialog.askopenfilename()
         if filename.endswith(tuple(data.media_file_formats)):
             files_to_convert.append(filename)
@@ -54,30 +53,33 @@ def converter_window():
     def clear():
         """Clear the path window"""
         paths_listbox.delete(0, 'end')
+        files_to_convert.clear()
 
     def convert():
         """Call for conversion"""
 
         def update_progress(progress):
+            """Update progress for each converting file"""
             progress_var.set(progress)
             root.update_idletasks()
 
         def convert_in_thread():
-            input_file = files_to_convert[0]
-            name, ext = os.path.splitext(input_file)
-            selected_format = format_box.get()
-            output_file = name.split('/')[-1] + "_convert" + selected_format
-            output_folder = load_settings_from_json()
-            output_path = os.path.join(output_folder, output_file)
-            codecs = load_codecs_from_json()
-            codec_to_be_used = codecs[selected_format]
+            """Contents of this function will be used in thread"""
+            for input_file in files_to_convert:
+                name, ext = os.path.splitext(input_file)
+                selected_format = format_box.get()
+                output_file = name.split('/')[-1] + "_convert" + selected_format
+                output_folder = load_settings_from_json()
+                output_path = os.path.join(output_folder, output_file)
+                codecs = load_codecs_from_json()
+                codec_to_be_used = codecs[selected_format]
 
-            try:
-                use_ffmpeg(input_file, output_path, codec_to_be_used, update_progress)
-            except FileNotFoundError:
-                print("No ffmpeg found")
+                try:
+                    use_ffmpeg(input_file, output_path, codec_to_be_used, update_progress)
+                except FileNotFoundError:
+                    print("No ffmpeg found")
 
-        # Start the conversion in a separate thread
+            # Start the conversion in a separate thread
         thread = threading.Thread(target=convert_in_thread)
         thread.start()
 
