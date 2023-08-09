@@ -3,7 +3,7 @@ import subprocess
 import threading
 from tkinterdnd2 import *
 from tkinter import PhotoImage, Label, Listbox, Button, filedialog, ttk, StringVar, DoubleVar, messagebox
-import src.config as data
+from src.config import media_file_formats, colors, font, version
 from src.info_window import showinfo
 from src.settings_window import showsettings
 from src.helpers import center_window, load_codecs_from_json, extract_duration, track_progress, load_settings_from_json
@@ -22,8 +22,9 @@ def converter_window():
         """Utilize FFmpeg for the conversion process"""
         message_label.configure(text="Converting...")
         ffmpeg_command = ['./executables/ffmpeg', '-i', input_file, '-c:v', video_codec, '-y', output_file]
-        process = subprocess.Popen(ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                   universal_newlines=True)
+        process = subprocess.Popen(
+            ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True
+        )
 
         duration = extract_duration(process.stderr)
         track_progress(process.stderr, duration, progress_callback)
@@ -42,7 +43,7 @@ def converter_window():
         """Prompt the user to select a file for conversion"""
         paths_listbox.delete(0, 'end')
         filename = filedialog.askopenfilename()
-        if filename.endswith(tuple(data.media_file_formats)):
+        if filename.endswith(tuple(media_file_formats)):
             files_to_convert.append(filename)
             for file in files_to_convert:
                 paths_listbox.insert('end', file.split("/")[-1])
@@ -86,9 +87,9 @@ def converter_window():
     # Create the main window
     root = TkinterDnD.Tk()
     center_window(root, 480, 420)
-    root.title(f"Audio-Video Converter v{data.version}")
+    root.title(f"Audio-Video Converter v{version}")
     root.iconbitmap('./images/audio-video_converter_icon_512x512.ico')
-    root.configure(bg=data.colors[2])
+    root.configure(bg=colors[2])
     root.resizable(False, False)
 
     background_image = PhotoImage(master=root, file='./images/background.png')
@@ -99,9 +100,9 @@ def converter_window():
     info_button = Button(
         root,
         image=info_image,
-        bg=data.colors[2],
-        activebackground=data.colors[2],
-        borderwidth=0,
+        bg=colors[2],
+        activebackground=colors[2],
+        bd=0,
         command=showinfo)
     info_button.place(x=392, y=15)
 
@@ -109,19 +110,19 @@ def converter_window():
     settings_button = Button(
         root,
         image=settings_image,
-        bg=data.colors[2],
-        activebackground=data.colors[2],
-        borderwidth=0,
+        bg=colors[2],
+        activebackground=colors[2],
+        bd=0,
         command=showsettings)
     settings_button.place(x=421, y=15)
 
     paths_listbox = Listbox(
         root,
-        bg=data.colors[0],
-        fg=data.colors[3],
+        bg=colors[0],
+        fg=colors[3],
         width=65,
         height=12,
-        borderwidth=0,
+        bd=0,
         highlightthickness=0)
     paths_listbox.place(x=44, y=60)
 
@@ -130,8 +131,8 @@ def converter_window():
         root,
         textvariable=extensions,
         state='readonly',
-        font=(data.font, 9), width=6)
-    format_box['values'] = sorted(data.media_file_formats)
+        font=(font, 9), width=6)
+    format_box['values'] = sorted(media_file_formats)
     format_box.current(10)
     format_box.place(x=209, y=290)
 
@@ -147,9 +148,9 @@ def converter_window():
     browse_button = Button(
         root,
         image=browse_image,
-        bg=data.colors[2],
-        activebackground=data.colors[2],
-        borderwidth=0,
+        bg=colors[2],
+        activebackground=colors[2],
+        bd=0,
         command=browse)
     browse_button.place(x=32, y=335)
 
@@ -157,9 +158,9 @@ def converter_window():
     convert_button = Button(
         root,
         image=convert_image,
-        bg=data.colors[2],
-        activebackground=data.colors[2],
-        borderwidth=0,
+        bg=colors[2],
+        activebackground=colors[2],
+        bd=0,
         command=convert)
     convert_button.place(x=188, y=335)
 
@@ -167,18 +168,18 @@ def converter_window():
     clear_button = Button(
         root,
         image=clear_image,
-        bg=data.colors[2],
-        activebackground=data.colors[2],
-        borderwidth=0,
+        bg=colors[2],
+        activebackground=colors[2],
+        bd=0,
         command=clear)
     clear_button.place(x=345, y=335)
 
     message_label = Label(
         root,
         text="",
-        font=(data.font, 10),
-        fg=data.colors[3],
-        bg=data.colors[2])
+        font=(font, 10),
+        fg=colors[3],
+        bg=colors[2])
     message_label.place(x=5, y=400)
 
     root.mainloop()
