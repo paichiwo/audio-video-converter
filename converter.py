@@ -11,6 +11,7 @@ from src.helpers import center_window, load_codecs_from_json, extract_duration, 
 # Play with drag and drop - try implementing
 # Show how many files were converted in some new label
 # Make the process faster (maybe add more than one thread)
+# Redesign UI for something nicer (custom tkinter)
 
 files_to_convert = []
 
@@ -84,6 +85,11 @@ def converter_window():
         thread = threading.Thread(target=convert_in_thread)
         thread.start()
 
+    def drop(event):
+        files_to_convert.append(event.data.strip("{}"))
+        for file in files_to_convert:
+            paths_listbox.insert('end', file.split("/")[-1])
+
     # Create the main window
     root = TkinterDnD.Tk()
     center_window(root, 480, 420)
@@ -125,6 +131,8 @@ def converter_window():
         bd=0,
         highlightthickness=0)
     paths_listbox.place(x=44, y=60)
+    paths_listbox.drop_target_register(DND_FILES)
+    paths_listbox.dnd_bind('<<Drop>>', drop)
 
     extensions = StringVar()
     format_box = ttk.Combobox(
