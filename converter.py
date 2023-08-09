@@ -8,18 +8,18 @@ from src.info_window import showinfo
 from src.settings_window import showsettings
 from src.helpers import center_window, load_codecs_from_json, extract_duration, track_progress, load_settings_from_json
 
-
-# add support for multiple files
-# play with drag and drop - try implementing
+# Play with drag and drop - try implementing
+# Show how many files were converted in some new label
+# Make the process faster (maybe add more than one thread)
 
 files_to_convert = []
 
 
 def converter_window():
-    """Main window where the conversion takes place"""
+    """Create the primary window for the conversion process"""
 
     def use_ffmpeg(input_file, output_file, video_codec, progress_callback):
-        """Use ffmpeg for conversion"""
+        """Utilize FFmpeg for the conversion process"""
         message_label.configure(text="Converting...")
         ffmpeg_command = ['./executables/ffmpeg', '-i', input_file, '-c:v', video_codec, '-y', output_file]
         process = subprocess.Popen(ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
@@ -39,7 +39,7 @@ def converter_window():
             messagebox.showerror("Conversion Error", error_message)
 
     def browse():
-        """Get a path for chosen file to be converted"""
+        """Prompt the user to select a file for conversion"""
         paths_listbox.delete(0, 'end')
         filename = filedialog.askopenfilename()
         if filename.endswith(tuple(data.media_file_formats)):
@@ -51,20 +51,20 @@ def converter_window():
             message_label.configure(text="This format is not allowed")
 
     def clear():
-        """Clear the path window"""
+        """Clear the list of selected files and reset the interface"""
         paths_listbox.delete(0, 'end')
         files_to_convert.clear()
 
     def convert():
-        """Call for conversion"""
+        """Initiate the conversion process"""
 
         def update_progress(progress):
-            """Update progress for each converting file"""
+            """Update the progress bar for each file being converted"""
             progress_var.set(progress)
             root.update_idletasks()
 
         def convert_in_thread():
-            """Contents of this function will be used in thread"""
+            """Perform the conversion in a separate thread"""
             for input_file in files_to_convert:
                 name, ext = os.path.splitext(input_file)
                 selected_format = format_box.get()
@@ -83,7 +83,7 @@ def converter_window():
         thread = threading.Thread(target=convert_in_thread)
         thread.start()
 
-    # Window elements
+    # Create the main window
     root = TkinterDnD.Tk()
     center_window(root, 480, 420)
     root.title(f"Audio-Video Converter v{data.version}")
@@ -91,17 +91,11 @@ def converter_window():
     root.configure(bg=data.colors[2])
     root.resizable(False, False)
 
-    background_image = PhotoImage(
-        master=root,
-        file='./images/background.png')
-    background_label = Label(
-        root,
-        image=background_image)
+    background_image = PhotoImage(master=root, file='./images/background.png')
+    background_label = Label(root, image=background_image)
     background_label.pack()
 
-    info_image = PhotoImage(
-        master=root,
-        file='./images/info_icon.png')
+    info_image = PhotoImage(master=root, file='./images/info_icon.png')
     info_button = Button(
         root,
         image=info_image,
@@ -111,9 +105,7 @@ def converter_window():
         command=showinfo)
     info_button.place(x=392, y=15)
 
-    settings_image = PhotoImage(
-        master=root,
-        file='./images/settings_icon.png')
+    settings_image = PhotoImage(master=root, file='./images/settings_icon.png')
     settings_button = Button(
         root,
         image=settings_image,
@@ -151,9 +143,7 @@ def converter_window():
         variable=progress_var)
     progress_bar.place(x=0, y=395, width=480, height=5)
 
-    browse_image = PhotoImage(
-        master=root,
-        file='./images/browse_button.png')
+    browse_image = PhotoImage(master=root, file='./images/browse_button.png')
     browse_button = Button(
         root,
         image=browse_image,
@@ -163,9 +153,7 @@ def converter_window():
         command=browse)
     browse_button.place(x=32, y=335)
 
-    convert_image = PhotoImage(
-        master=root,
-        file='./images/convert_button.png')
+    convert_image = PhotoImage(master=root, file='./images/convert_button.png')
     convert_button = Button(
         root,
         image=convert_image,
@@ -175,9 +163,7 @@ def converter_window():
         command=convert)
     convert_button.place(x=188, y=335)
 
-    clear_image = PhotoImage(
-        master=root,
-        file='./images/clear_button.png')
+    clear_image = PhotoImage(master=root, file='./images/clear_button.png')
     clear_button = Button(
         root,
         image=clear_image,
