@@ -41,7 +41,8 @@ def converter_window():
 
     def drop(event):
         """Handle dropped file or files"""
-        if event.data and event.widget == paths_listbox:
+        if event.data and (event.widget == paths_listbox or event.widget == plus_label):
+            plus_label.destroy()
             files = paths_listbox.tk.splitlist(event.data)
             for file in files:
                 if file.endswith(tuple(media_file_formats)):
@@ -50,13 +51,13 @@ def converter_window():
                     message_label.configure(text="")
                 else:
                     message_label.configure(text="This format is not allowed")
-        print(files_to_convert)
 
     def browse():
         """select file or files for conversion"""
         # paths_listbox.delete(0, 'end')
         files = filedialog.askopenfilenames()
         if files:
+            plus_label.destroy()
             for file in files:
                 if file.endswith(tuple(media_file_formats)):
                     files_to_convert.append(file)
@@ -141,6 +142,12 @@ def converter_window():
     paths_listbox.place(x=44, y=60)
     paths_listbox.drop_target_register(DND_FILES)
     paths_listbox.dnd_bind('<<Drop>>', drop)
+
+    plus_image = PhotoImage(master=root, file=images['plus_large'])
+    plus_label = Label(root, image=plus_image, background=colors[0])
+    plus_label.place(x=208, y=120)
+    plus_label.drop_target_register(DND_FILES)
+    plus_label.dnd_bind('<<Drop>>', drop)
 
     extensions = StringVar()
     format_box = ttk.Combobox(

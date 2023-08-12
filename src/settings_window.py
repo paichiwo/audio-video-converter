@@ -10,7 +10,6 @@ def showsettings():
         """Get a file path for the chosen output folder"""
         folder_selected = filedialog.askdirectory()
         output_path_label.configure(text=folder_selected)
-        return
 
     def save():
         """Save settings callback"""
@@ -18,7 +17,7 @@ def showsettings():
         save_settings(output_folder)
 
     sett = Tk()
-    center_window(sett, 480, 230)
+    sett.geometry("480x230+1200+400")
     sett.title("Settings")
     sett.iconbitmap(images['icon'])
     sett.configure(bg=colors[2])

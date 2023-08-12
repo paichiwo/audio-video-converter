@@ -19,6 +19,7 @@ images = {
     'filepath': resource_path('images/filepath.png'),
     'folder': resource_path('images/folder_icon.png'),
     'plus': resource_path('images/plus_16x16.png'),
+    'plus_large': resource_path('images/plus.png'),
     'save': resource_path('images/save_button.png'),
     'github': resource_path('images/github_icon_32x32.png')
 }
