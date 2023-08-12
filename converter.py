@@ -3,12 +3,11 @@ import subprocess
 import threading
 from tkinterdnd2 import *
 from tkinter import PhotoImage, Label, Listbox, Button, filedialog, ttk, StringVar, DoubleVar, messagebox
-from src.config import media_file_formats, colors, font, version
+from src.config import media_file_formats, colors, font, version, images
 from src.info_window import showinfo
 from src.settings_window import showsettings
 from src.helpers import center_window, load_codecs_from_json, extract_duration, track_progress, load_settings_from_json
 
-# Play with drag and drop - try implementing
 # Show how many files were converted in some new label
 # Make the process faster (maybe add more than one thread)
 # Redesign UI for something nicer (custom tkinter)
@@ -103,15 +102,15 @@ def converter_window():
     root = TkinterDnD.Tk()
     center_window(root, 480, 420)
     root.title(f"Audio-Video Converter v{version}")
-    root.iconbitmap('./images/audio-video_converter_icon_512x512.ico')
+    root.iconbitmap(images['icon'])
     root.configure(bg=colors[2])
     root.resizable(False, False)
 
-    background_image = PhotoImage(master=root, file='./images/background.png')
+    background_image = PhotoImage(master=root, file=images['bg'])
     background_label = Label(root, image=background_image)
     background_label.pack()
 
-    info_image = PhotoImage(master=root, file='./images/info_icon.png')
+    info_image = PhotoImage(master=root, file=images['info'])
     info_button = Button(
         root,
         image=info_image,
@@ -121,7 +120,7 @@ def converter_window():
         command=showinfo)
     info_button.place(x=392, y=15)
 
-    settings_image = PhotoImage(master=root, file='./images/settings_icon.png')
+    settings_image = PhotoImage(master=root, file=images['settings'])
     settings_button = Button(
         root,
         image=settings_image,
@@ -161,7 +160,7 @@ def converter_window():
         variable=progress_var)
     progress_bar.place(x=0, y=395, width=480, height=5)
 
-    browse_image = PhotoImage(master=root, file='./images/browse_button.png')
+    browse_image = PhotoImage(master=root, file=images['browse'])
     browse_button = Button(
         root,
         image=browse_image,
@@ -171,7 +170,7 @@ def converter_window():
         command=browse)
     browse_button.place(x=32, y=335)
 
-    convert_image = PhotoImage(master=root, file='./images/convert_button.png')
+    convert_image = PhotoImage(master=root, file=images['convert'])
     convert_button = Button(
         root,
         image=convert_image,
@@ -181,7 +180,7 @@ def converter_window():
         command=convert)
     convert_button.place(x=188, y=335)
 
-    clear_image = PhotoImage(master=root, file='./images/clear_button.png')
+    clear_image = PhotoImage(master=root, file=images['clear'])
     clear_button = Button(
         root,
         image=clear_image,

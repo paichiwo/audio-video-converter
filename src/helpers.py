@@ -1,7 +1,23 @@
 import os
 import re
 import json
+import sys
 import webbrowser
+
+
+def resource_path(relative_path):
+    """Get the absolute path to a resource, accommodating both development and PyInstaller builds"""
+    if hasattr(sys, '_MEIPASS'):
+        base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+        return os.path.join(base_path, relative_path)
+    return os.path.join(os.path.abspath('.'), relative_path)
+
+
+def get_downloads_folder_path():
+    """Get the path to the Downloads folder on Windows"""
+    user_profile = os.environ['USERPROFILE']
+    downloads_folder = os.path.join(user_profile, 'Downloads')
+    return downloads_folder
 
 
 def center_window(window, width, height):
