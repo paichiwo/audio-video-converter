@@ -6,7 +6,7 @@ from tkinter import PhotoImage, Label, Listbox, Button, filedialog, ttk, StringV
 from src.config import media_file_formats, colors, font, version, images
 from src.info_window import showinfo
 from src.settings_window import showsettings
-from src.helpers import center_window, load_codecs_from_json, extract_duration, track_progress, load_settings_from_json
+from src.helpers import center_window, load_codecs_from_json, extract_duration, track_progress, load_settings
 
 # Show how many files were converted in some new label
 # Make the process faster (maybe add more than one thread)
@@ -84,7 +84,7 @@ def converter_window():
                 name, ext = os.path.splitext(input_file)
                 selected_format = format_box.get()
                 output_file = name.split('/')[-1] + "_convert" + selected_format
-                output_folder = load_settings_from_json()
+                output_folder = load_settings()
                 output_path = os.path.join(output_folder, output_file)
                 codecs = load_codecs_from_json()
                 codec_to_be_used = codecs[selected_format]

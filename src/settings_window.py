@@ -1,6 +1,6 @@
 from src.config import images, colors, font
 from tkinter import Tk, filedialog, Label, PhotoImage, Button
-from src.helpers import load_settings_from_json, save_settings_to_json
+from src.helpers import load_settings, save_settings
 
 
 def showsettings():
@@ -12,14 +12,13 @@ def showsettings():
         output_path_label.configure(text=folder_selected)
         return
 
-    def save_settings():
+    def save():
         """Save settings callback"""
         output_folder = output_path_label.cget('text')
-        save_settings_to_json(output_folder)
-        settings_info_label.configure(text="Settings saved")
+        save_settings(output_folder)
 
     sett = Tk()
-    sett.geometry("480x250")
+    sett.geometry("480x270")
     sett.title("Settings")
     sett.iconbitmap(images['icon'])
     sett.configure(bg=colors[2])
@@ -64,7 +63,7 @@ def showsettings():
 
     output_path_label = Label(
         sett,
-        text=load_settings_from_json(),
+        text=load_settings(),
         font=(font, 10),
         fg=colors[3],
         bg=colors[0],
@@ -92,15 +91,7 @@ def showsettings():
         bg=colors[2],
         activebackground=colors[2],
         borderwidth=0,
-        command=save_settings)
+        command=save)
     save_button.pack()
-
-    settings_info_label = Label(
-        sett,
-        text="",
-        font=(font, 10),
-        fg=colors[3],
-        bg=colors[2])
-    settings_info_label.place(x=10, y=278)
 
     sett.mainloop()

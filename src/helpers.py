@@ -13,13 +13,6 @@ def resource_path(relative_path):
     return os.path.join(os.path.abspath('.'), relative_path)
 
 
-def get_downloads_folder_path():
-    """Get the path to the Downloads folder on Windows"""
-    user_profile = os.environ['USERPROFILE']
-    downloads_folder = os.path.join(user_profile, 'Downloads')
-    return downloads_folder
-
-
 def center_window(window, width, height):
     """Create a window in the center of the screen, using desired dimensions"""
     screen_width = window.winfo_screenwidth()
@@ -72,18 +65,27 @@ def track_progress(ffmpeg_output, duration, progress_callback):
                 progress_callback(progress)
 
 
-def save_settings_to_json(location):
-    """Save settings to json file"""
-    with open('./data/settings.json', 'w') as file:
-        json.dump({'output_folder': location}, file)
-
-
-def load_settings_from_json():
-    """Try loading settings from a json file or use Downloads folder in C:/Users/name/"""
+def load_settings():
+    """Load settings from a JSON file"""
+    path = os.path.join(os.environ['LOCALAPPDATA'], 'Tube-Getter', 'settings.json')
     try:
-        with open('./data/settings.json', 'r') as file:
+        with open(path, 'r') as file:
             settings = json.load(file)
-            return settings['output_folder']
+            return settings.get('output_folder')
     except (json.decoder.JSONDecodeError, FileNotFoundError):
         output_folder = get_downloads_folder_path()
         return output_folder
+
+
+def save_settings(output_folder):
+    """Save settings to a JSON file"""
+    settings_file = 'settings.json'
+    path = os.path.join(os.environ['LOCALAPPDATA'], 'Tube-Getter')
+    settings_path = os.path.join(path, settings_file)
+    data = {'output_folder': output_folder}
+
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+    with open(settings_path, 'w') as file:
+        json.dump(data, file)
