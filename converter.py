@@ -3,7 +3,7 @@ import subprocess
 import threading
 from tkinterdnd2 import *
 from tkinter import PhotoImage, Label, Listbox, Button, filedialog, ttk, StringVar, DoubleVar, messagebox
-from src.config import media_file_formats, colors, font, version, images
+from src.config import ffmpeg_path, media_file_formats, colors, font, version, images
 from src.info_window import showinfo
 from src.settings_window import showsettings
 from src.helpers import center_window, load_codecs_from_json, extract_duration, track_progress, load_settings
@@ -21,7 +21,7 @@ def converter_window():
     def use_ffmpeg(input_file, output_file, video_codec, progress_callback):
         """Utilize FFmpeg for the conversion process"""
         message_label.configure(text="Converting...")
-        ffmpeg_command = ['./executables/ffmpeg', '-i', input_file, '-c:v', video_codec, '-y', output_file]
+        ffmpeg_command = [ffmpeg_path, '-i', input_file, '-c:v', video_codec, '-y', output_file]
         process = subprocess.Popen(
             ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True
         )
