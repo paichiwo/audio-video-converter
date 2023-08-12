@@ -1,6 +1,6 @@
 from src.config import images, colors, font
 from tkinter import Tk, filedialog, Label, PhotoImage, Button
-from src.helpers import load_settings, save_settings
+from src.helpers import load_settings, save_settings, center_window
 
 
 def showsettings():
@@ -18,7 +18,7 @@ def showsettings():
         save_settings(output_folder)
 
     sett = Tk()
-    sett.geometry("480x270")
+    center_window(sett, 480, 230)
     sett.title("Settings")
     sett.iconbitmap(images['icon'])
     sett.configure(bg=colors[2])
@@ -26,7 +26,7 @@ def showsettings():
 
     settings_header = Label(
         sett,
-        text="SETTINGS\n\n",
+        text="SETTINGS\n",
         font=(font, 13, 'bold'),
         fg=colors[3],
         bg=colors[2],
@@ -59,7 +59,7 @@ def showsettings():
         sett,
         image=folder_icon_image,
         bg=colors[0])
-    folder_icon_label.place(x=44, y=123)
+    folder_icon_label.place(x=44, y=103)
 
     output_path_label = Label(
         sett,
@@ -68,7 +68,7 @@ def showsettings():
         fg=colors[3],
         bg=colors[0],
         justify='left')
-    output_path_label.place(x=75, y=123)
+    output_path_label.place(x=75, y=105)
 
     output_path_button_image = PhotoImage(
         master=sett,
@@ -80,7 +80,7 @@ def showsettings():
         activebackground=colors[0],
         borderwidth=0,
         command=get_output_path)
-    output_path_button.place(x=410, y=126)
+    output_path_button.place(x=410, y=106)
 
     save_button_image = PhotoImage(
         master=sett,
