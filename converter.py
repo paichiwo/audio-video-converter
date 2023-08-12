@@ -40,17 +40,31 @@ def converter_window():
             Return Code: {process.returncode}"""
             messagebox.showerror("Conversion Error", error_message)
 
+    def drop(event):
+        """Handle dropped file or files"""
+        if event.data and event.widget == paths_listbox:
+            files = paths_listbox.tk.splitlist(event.data)
+            for file in files:
+                if file.endswith(tuple(media_file_formats)):
+                    files_to_convert.append(file)
+                    paths_listbox.insert('end', file.split('/')[-1])
+                    message_label.configure(text="")
+                else:
+                    message_label.configure(text="This format is not allowed")
+        print(files_to_convert)
+
     def browse():
-        """Prompt the user to select a file for conversion"""
-        paths_listbox.delete(0, 'end')
-        filename = filedialog.askopenfilename()
-        if filename.endswith(tuple(media_file_formats)):
-            files_to_convert.append(filename)
-            for file in files_to_convert:
-                paths_listbox.insert('end', file.split("/")[-1])
-                message_label.configure(text="")
-        else:
-            message_label.configure(text="This format is not allowed")
+        """select file or files for conversion"""
+        # paths_listbox.delete(0, 'end')
+        files = filedialog.askopenfilenames()
+        if files:
+            for file in files:
+                if file.endswith(tuple(media_file_formats)):
+                    files_to_convert.append(file)
+                    paths_listbox.insert('end', file.split("/")[-1])
+                    message_label.configure(text="")
+                else:
+                    message_label.configure(text="This format is not allowed")
 
     def clear():
         """Clear the list of selected files and reset the interface"""
@@ -84,11 +98,6 @@ def converter_window():
             # Start the conversion in a separate thread
         thread = threading.Thread(target=convert_in_thread)
         thread.start()
-
-    def drop(event):
-        files_to_convert.append(event.data.strip("{}"))
-        for file in files_to_convert:
-            paths_listbox.insert('end', file.split("/")[-1])
 
     # Create the main window
     root = TkinterDnD.Tk()
