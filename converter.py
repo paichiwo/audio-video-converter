@@ -1,5 +1,6 @@
 import os
 import subprocess
+from subprocess import CREATE_NO_WINDOW
 import threading
 from tkinterdnd2 import *
 from tkinter import PhotoImage, Label, Listbox, Button, filedialog, ttk, StringVar, DoubleVar, messagebox
@@ -23,7 +24,13 @@ def converter_window():
         message_label.configure(text="Converting...")
         ffmpeg_command = [ffmpeg_path, '-i', input_file, '-c:v', video_codec, '-y', output_file]
         process = subprocess.Popen(
-            ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True
+            ffmpeg_command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            stdin=subprocess.PIPE,
+            creationflags=CREATE_NO_WINDOW,
+            shell=False,
+            universal_newlines=True
         )
 
         duration = extract_duration(process.stderr)

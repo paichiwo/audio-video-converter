@@ -7,7 +7,7 @@ version = "1.0"
 font = "Calibri"
 colors = ['#087e8b', '#ff5a5f', '#3c3c3c', '#f5f5f5']
 
-ffmpeg_path = resource_path('executables/ffmpeg')
+ffmpeg_path = resource_path('executables/ffmpeg.exe')
 
 images = {
     'icon': resource_path('images/audio-video_converter_icon_512x512.ico'),
