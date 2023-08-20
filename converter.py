@@ -29,7 +29,6 @@ def converter_window():
             stderr=subprocess.PIPE,
             stdin=subprocess.PIPE,
             creationflags=CREATE_NO_WINDOW,
-            shell=False,
             universal_newlines=True
         )
 
@@ -100,7 +99,7 @@ def converter_window():
                 try:
                     use_ffmpeg(input_file, output_path, codec_to_be_used, update_progress)
                 except FileNotFoundError:
-                    print("No ffmpeg found")
+                    message_label.configure(text="No ffmpeg found")
 
             # Start the conversion in a separate thread
         thread = threading.Thread(target=convert_in_thread)
