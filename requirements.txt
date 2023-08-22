@@ -1,0 +1,3 @@
+future
+tkinterdnd2
+customtkinter
